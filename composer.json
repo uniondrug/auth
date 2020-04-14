@@ -1,0 +1,32 @@
+{
+    "name": "uniondrug/auth",
+    "description": "Uniondrug Auth Component",
+    "keywords": [
+        "uniondrug",
+        "auth"
+    ],
+    "license": "proprietary",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Uniondrug Dev Team",
+            "email": "dev@uniondrug.cn"
+        }
+    ],
+    "require": {
+        "uniondrug/framework": "^2.0",
+        "uniondrug/structs" : "^2.0",
+        "uniondrug/service" : "^2.0",
+        "uniondrug/middleware": "^2.0",
+        "uniondrug/redis": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uniondrug\\Auth\\": "src/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}

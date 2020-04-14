@@ -2,19 +2,18 @@
 namespace Uniondrug\TokenAuthMiddleware;
 
 use Phalcon\Config;
-use Uniondrug\Auth\AuthStruct;
 use Uniondrug\Redis\Client;
 use Phalcon\Http\RequestInterface;
+use Uniondrug\Auth\AuthMemberStruct;
 use Uniondrug\Framework\Services\Service;
 
 class AuthService extends Service
 {
-    /**
-     * @var array
-     */
     protected $whiteList = null;
 
     protected $redis = null;
+
+    public $member = null;
 
     public function getTokenFromRequest(RequestInterface $request)
     {
@@ -23,11 +22,6 @@ class AuthService extends Service
         return $matches[1];
     }
 
-    /**
-     * 检查URL是否在白名单中
-     * @param string $uri
-     * @return bool
-     */
     public function isWhiteList($uri)
     {
         $regexp = $this->getWhiteList();
@@ -37,10 +31,6 @@ class AuthService extends Service
         return false;
     }
 
-    /**
-     * 读取白名单的Regexp过滤规则
-     * @return string
-     */
     public function getWhiteList()
     {
         $whiteList = $this->config->path('auth.whitelist');
@@ -51,16 +41,12 @@ class AuthService extends Service
         }
     }
 
-    /**
-     * 检查Token是否存在
-     * @param string $token
-     * @return false|AuthStruct
-     */
     public function checkToken($token)
     {
         if ($data = $this->getRedis()->get($token)) {
             $data = json_decode($data, true);
-            return AuthStruct::factory($data);
+            $this->member =  AuthMemberStruct::factory($data);
+            return true;
         }
         return false;
     }

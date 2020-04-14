@@ -4,7 +4,7 @@ namespace Uniondrug\Auth;
 
 use Uniondrug\Structs\Struct;
 
-class AuthStruct extends Struct
+class AuthMemberStruct extends Struct
 {
     /**
      * 药联用户id

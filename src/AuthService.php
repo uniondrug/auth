@@ -1,10 +1,9 @@
 <?php
-namespace Uniondrug\TokenAuthMiddleware;
+namespace Uniondrug\Auth;
 
 use Phalcon\Config;
 use Uniondrug\Redis\Client;
 use Phalcon\Http\RequestInterface;
-use Uniondrug\Auth\AuthMemberStruct;
 use Uniondrug\Framework\Services\Service;
 
 class AuthService extends Service
@@ -19,7 +18,7 @@ class AuthService extends Service
     {
         $authHeader = $request->getHeader('Authorization');
         preg_match("/^Bearer\s+([_a-zA-Z0-9\-]+)$/", $authHeader, $matches);
-        return $matches[1];
+        return $matches[1]??'';
     }
 
     public function isWhiteList($uri)
@@ -55,7 +54,7 @@ class AuthService extends Service
     {
         if (!$this->redis){
             $redisConfig = $this->config->path('auth.redis');
-            $this->redis = new Client($redisConfig);
+            $this->redis = new Client($redisConfig->toArray());
         }
         return $this->redis;
     }

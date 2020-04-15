@@ -1,6 +1,6 @@
 <?php
 
-namespace Uniondrug\TokenAuthMiddleware;
+namespace Uniondrug\Auth;
 
 use Phalcon\Di\ServiceProviderInterface;
 

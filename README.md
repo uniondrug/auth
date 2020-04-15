@@ -13,6 +13,7 @@
             ......
             'providers'           => [
                 ......
+                \Uniondrug\Middleware\MiddlewareServiceProvider::class,
                 \Uniondrug\Auth\AuthServiceProvider::class,
             ],
         ],

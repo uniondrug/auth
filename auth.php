@@ -8,6 +8,7 @@ return [
             'timeout' => 10,
             'index' => 0
         ],
+        'public_key_path' => '',
         'whitelist' => ''
     ]
 ];

@@ -32,6 +32,8 @@
                 'timeout' => 10,
                 'index' => 0
             ],
+            //设置签名验证的public key路径(绝对路径！)，public key文件从vendor/uniondrug/auth/public.key中复制即可
+            'public_key_path' => '',
             //白名单，这个列表内的地址不需要认证，通常放登录接口等地址
             'whitelist' => ''
         ]

@@ -21,6 +21,14 @@ class AuthMemberStruct extends Struct
     public $wxOpenid;
 
     /**
+     * jwt版本信息（用来验证有效性）
+     *
+     * @var \Uniondrug\Auth\AuthVersion
+     */
+    public $version;
+
+
+    /**
      * 登录的用户信息
      * 注意，用户登录期间可能发生修改
      *
@@ -29,9 +37,28 @@ class AuthMemberStruct extends Struct
     public $info;
 
     /**
+     * 用户的渠道信息
+     *
      * @var \Uniondrug\Auth\AuthChannel
      */
     public $channel;
+}
+
+class AuthVersion extends Struct
+{
+    /**
+     * redis的key
+     *
+     * @var string
+     */
+    public $key;
+
+    /**
+     * redis的value
+     *
+     * @var int
+     */
+    public $value;
 }
 
 class AuthMemberInfo extends Struct

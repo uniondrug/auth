@@ -12,13 +12,15 @@ class AuthService extends Service
 
     protected $redis = null;
 
+    /**
+     * @var AuthMemberStruct
+     */
     public $member = null;
 
     public function getTokenFromRequest(RequestInterface $request)
     {
         $authHeader = $request->getHeader('Authorization');
-        preg_match("/^Bearer\s+([_a-zA-Z0-9\-]+)$/", $authHeader, $matches);
-        return $matches[1]??'';
+        return trim(str_replace('Bearer', '', $authHeader));
     }
 
     public function isWhiteList($uri)
@@ -44,19 +46,17 @@ class AuthService extends Service
     {
         list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
         $dataEncoded = "$headerEncoded.$payloadEncoded";
-        $signature = base64_decode($signatureEncoded);
-        $publicKeyResource = openssl_pkey_get_public(__DIR__.'public.key');
+        $signature = $this->base64url_decode($signatureEncoded);
+        $publicKeyResource = openssl_pkey_get_public("file://".$this->config->path('auth.public_key_path'));
         $result = openssl_verify($dataEncoded, $signature, $publicKeyResource, 'sha256');
         if ($result === -1){
             throw new \Exception("Failed to verify signature: ".openssl_error_string());
         }
         elseif ($result){
             $payload = json_decode(base64_decode($payloadEncoded), true);
-            $channel = $payload['channel'];
-            $memberId = $payload['memberId'];
-            $key = $channel?"AUTH_{$channel['type']}_{$memberId}":"AUTH_mobile_{$memberId}";
-            $flag = $this->getRedis()->get($key);
-            if ($flag == $payload['flag']){
+            $key = $payload['version']['key'];
+            $version = $this->getRedis()->get($key);
+            if ($version == $payload['version']['value']){
                 $this->member = AuthMemberStruct::factory($payload);
                 return true;
             }
@@ -69,6 +69,15 @@ class AuthService extends Service
         }
     }
 
+    public function logout()
+    {
+        $key = $this->member->version->key;
+        $this->getRedis()->del($key);
+    }
+
+    /**
+     * @return \Redis
+     */
     protected function getRedis()
     {
         if (!$this->redis){
@@ -76,5 +85,10 @@ class AuthService extends Service
             $this->redis = new Client($redisConfig->toArray());
         }
         return $this->redis;
+    }
+
+    protected function base64url_decode($data)
+    {
+        return base64_decode(str_replace(['-','_'], ['+','/'], $data));
     }
 }

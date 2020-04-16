@@ -42,12 +42,31 @@ class AuthService extends Service
 
     public function checkToken($token)
     {
-        if ($data = $this->getRedis()->get($token)) {
-            $data = json_decode($data, true);
-            $this->member =  AuthMemberStruct::factory($data);
-            return true;
+        list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
+        $dataEncoded = "$headerEncoded.$payloadEncoded";
+        $signature = base64_decode($signatureEncoded);
+        $publicKeyResource = openssl_pkey_get_public(__DIR__.'public.key');
+        $result = openssl_verify($dataEncoded, $signature, $publicKeyResource, 'sha256');
+        if ($result === -1){
+            throw new \Exception("Failed to verify signature: ".openssl_error_string());
         }
-        return false;
+        elseif ($result){
+            $payload = json_decode(base64_decode($payloadEncoded), true);
+            $channel = $payload['channel'];
+            $memberId = $payload['memberId'];
+            $key = $channel?"AUTH_{$channel['type']}_{$memberId}":"AUTH_mobile_{$memberId}";
+            $flag = $this->getRedis()->get($key);
+            if ($flag == $payload['flag']){
+                $this->member = AuthMemberStruct::factory($payload);
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            return false;
+        }
     }
 
     protected function getRedis()

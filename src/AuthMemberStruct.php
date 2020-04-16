@@ -21,9 +21,34 @@ class AuthMemberStruct extends Struct
     public $wxOpenid;
 
     /**
+     * 登录的用户信息
+     * 注意，用户登录期间可能发生修改
+     *
+     * @var \Uniondrug\Auth\AuthMemberInfo
+     */
+    public $info;
+
+    /**
      * @var \Uniondrug\Auth\AuthChannel
      */
     public $channel;
+}
+
+class AuthMemberInfo extends Struct
+{
+    /**
+     * 姓名
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * 手机号
+     *
+     * @var string
+     */
+    public $mobile;
 }
 
 class AuthChannel extends Struct

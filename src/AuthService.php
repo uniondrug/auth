@@ -47,7 +47,7 @@ class AuthService extends Service
         list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
         $dataEncoded = "$headerEncoded.$payloadEncoded";
         $signature = $this->base64url_decode($signatureEncoded);
-        $publicKeyResource = openssl_pkey_get_public("file://".$this->config->path('auth.public_key_path'));
+        $publicKeyResource = openssl_pkey_get_public(file_get_contents($this->config->path('auth.public_key_path')));
         $result = openssl_verify($dataEncoded, $signature, $publicKeyResource, 'sha256');
         if ($result === -1){
             throw new \Exception("Failed to verify signature: ".openssl_error_string());

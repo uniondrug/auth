@@ -63,5 +63,5 @@
 ## 使用
 * 获取通过验证的用户
 ```php
-$this->authService->member
+$this->di->get("auth_member")
 ```

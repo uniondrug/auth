@@ -25,10 +25,11 @@ class AuthMiddleware extends Middleware
             return $this->serviceServer->withError('Unauthorized', 401);
         }
         // 2. 校验TOKEN, return 403
-        if (!$this->authService->checkToken($token)) {
+        if (!$member = $this->authService->checkToken($token)) {
             $this->di->getLogger('auth')->debug(sprintf("[Auth] Invalid Token: token=%s", $token));
             return $this->serviceServer->withError('Forbidden: Invalid Token', 403);
         }
+        $this->di->set('auth_member', $member);
         return $next($request);
     }
 }

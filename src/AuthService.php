@@ -12,11 +12,6 @@ class AuthService extends Service
 
     protected $redis = null;
 
-    /**
-     * @var AuthMemberStruct
-     */
-    public $member = null;
-
     public function getTokenFromRequest(RequestInterface $request)
     {
         $authHeader = $request->getHeader('Authorization');
@@ -42,9 +37,16 @@ class AuthService extends Service
         }
     }
 
+    /**
+     * @param $token
+     * @return AuthMemberStruct|bool
+     * @throws \Exception
+     */
     public function checkToken($token)
     {
-        list($headerEncoded, $payloadEncoded, $signatureEncoded) = explode('.', $token);
+        $token = explode('.', $token);
+        if (count($token) != 3) return false;
+        list($headerEncoded, $payloadEncoded, $signatureEncoded) = $token;
         $dataEncoded = "$headerEncoded.$payloadEncoded";
         $signature = $this->base64url_decode($signatureEncoded);
         $publicKeyResource = openssl_pkey_get_public(file_get_contents($this->config->path('auth.public_key_path')));
@@ -57,23 +59,11 @@ class AuthService extends Service
             $payload = json_decode(base64_decode($payloadEncoded), true);
             $key = $payload['version']['key'];
             $version = $this->getRedis()->get($key);
-            if ($version == $payload['version']['value']){
-                $this->member = AuthMemberStruct::factory($payload);
-                return true;
-            }
-            else{
-                return false;
-            }
+            return $version == $payload['version']['value'] ? AuthMemberStruct::factory($payload) : false;
         }
         else{
             return false;
         }
-    }
-
-    public function logout()
-    {
-        $key = $this->member->version->key;
-        $this->getRedis()->del($key);
     }
 
     /**

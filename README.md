@@ -26,11 +26,13 @@
         'default' => [
             //token存储的redis链接信息
             'redis' => [
-                'host' => '192.168.3.193',
-                'auth' => "uniondrug@123",
-                'port' => '6379',
-                'timeout' => 10,
-                'index' => 0
+                'options' => [
+                    'host' => '192.168.3.193',
+                    'auth' => "uniondrug@123",
+                    'port' => '6379',
+                    'timeout' => 10,
+                    'index' => 0
+                ]
             ],
             //设置签名验证的public key路径(绝对路径！)，public key文件从vendor/uniondrug/auth/public.key中复制即可
             //phar包部署时要注意.key文件默认不会被打包，要修改项目的PharCommand.php文件！！！

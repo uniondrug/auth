@@ -56,7 +56,7 @@ class AuthService extends Service
             throw new \Exception("Failed to verify signature: ".openssl_error_string());
         }
         elseif ($result){
-            $payload = json_decode(base64_decode($payloadEncoded), true);
+            $payload = json_decode($this->base64url_decode($payloadEncoded), true);
             $key = $payload['version']['key'];
             $version = $this->getRedis()->get($key);
             return $version == $payload['version']['value'] ? AuthMemberStruct::factory($payload) : false;
@@ -72,7 +72,7 @@ class AuthService extends Service
     protected function getRedis()
     {
         if (!$this->redis){
-            $redisConfig = $this->config->path('auth.redis');
+            $redisConfig = $this->config->path('auth.redis.options');
             $this->redis = new Client($redisConfig->toArray());
         }
         return $this->redis;

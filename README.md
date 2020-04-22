@@ -39,6 +39,54 @@
             'public_key_path' => '',
             //白名单，这个列表内的地址不需要认证，通常放登录接口等地址
             'whitelist' => ''
+        ],
+        'development' => [
+            //token存储的redis链接信息
+            'redis' => [
+                'options' => [
+                    'host' => '',
+                    'auth' => '',
+                    'port' => '',
+                    'timeout' => '',
+                    'index' => '' 
+                ]
+            ],
+        ],
+        'testing' => [
+             //token存储的redis链接信息
+            'redis' => [
+                'options' => [
+                    'host' => '',
+                    'auth' => '',
+                    'port' => '',
+                    'timeout' => '',
+                    'index' => ''
+                ]
+            ],
+        ],
+        'release' => [
+        //token存储的redis链接信息
+            'redis' => [
+                'options' => [
+                    'host' => '',
+                    'auth' => '',
+                    'port' => '',
+                    'timeout' => '',
+                    'index' => ''
+                ]
+            ],
+        ],
+        'production' => [
+            //token存储的redis链接信息
+            'redis' => [
+                'options' => [
+                    'host' => '',
+                    'auth' => '',
+                    'port' => '',
+                    'timeout' => '',
+                    'index' => ''
+                ]
+            ],
         ]
     ];
     ```

@@ -90,4 +90,16 @@ class AuthChannel extends Struct
      * @var string
      */
     public $openid;
+    /**
+     * 万达openid
+     *
+     * @var string
+     */
+    public $wdOpenid;
+    /**
+     * 万达account id
+     *
+     * @var string
+     */
+    public $wdAccountId;
 }

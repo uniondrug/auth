@@ -81,7 +81,7 @@ class AuthMemberInfo extends Struct
 class AuthChannel extends Struct
 {
     /**
-     * 渠道类型：wechat——微信；QJB——企建部；GHT——工会通；WANDA——万达
+     * 渠道类型：wechat——微信；QJB——企建部；GHT——工会通；WANDA——万达；qywechat——企业微信；
      */
     public $type;
     /**
@@ -102,4 +102,10 @@ class AuthChannel extends Struct
      * @var string
      */
     public $wdAccountId;
+    /**
+     * 企业微信openid
+     *
+     * @var string
+     */
+    public $qyOpenid;
 }

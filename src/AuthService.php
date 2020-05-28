@@ -82,4 +82,22 @@ class AuthService extends Service
     {
         return base64_decode(str_replace(['-','_'], ['+','/'], $data));
     }
+
+    /**
+     * openssl解密openid
+     * @param $encryptedOpenid
+     * @return mixed
+     * @throws \Exception
+     */
+    public function opensslDecryptOpenid($encryptedOpenid)
+    {
+        $publicKeyFilePath = $this->config->path('app.jwt.public_key_path');
+        $publicKey = openssl_pkey_get_public(file_get_contents($publicKeyFilePath));
+        $ret = openssl_public_decrypt(base64_decode($encryptedOpenid), $decryptData, $publicKey);
+        if(empty($ret)){
+            throw new \Exception("openssl decrypt fail ".openssl_error_string());
+        }
+        openssl_pkey_free($publicKey);
+        return $decryptData;
+    }
 }

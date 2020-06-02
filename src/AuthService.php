@@ -91,7 +91,7 @@ class AuthService extends Service
      */
     public function opensslDecryptOpenid($encryptedOpenid)
     {
-        $publicKeyFilePath = $this->config->path('app.jwt.public_key_path');
+        $publicKeyFilePath = $this->config->path('auth.public_key_path');
         $publicKey = openssl_pkey_get_public(file_get_contents($publicKeyFilePath));
         $ret = openssl_public_decrypt(base64_decode($encryptedOpenid), $decryptData, $publicKey);
         if(empty($ret)){

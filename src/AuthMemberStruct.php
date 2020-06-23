@@ -108,4 +108,22 @@ class AuthChannel extends Struct
      * @var string
      */
     public $qyOpenid;
+    /**
+     * 药店宝店员id
+     *
+     * @var int
+     */
+    public $assistantId;
+    /**
+     * 门店id
+     *
+     * @var int
+     */
+    public $storeId;
+    /**
+     * 连锁id
+     *
+     * @var int
+     */
+    public $merchantId;
 }

@@ -59,7 +59,7 @@ class AuthService extends Service
             $payload = json_decode($this->base64url_decode($payloadEncoded), true);
             $key = $payload['version']['key'];
             $version = $this->getRedis()->get($key);
-            return $version == $payload['version']['value'] ? AuthMemberStruct::factory($payload) : false;
+            return $version == $payload['version']['value'] ? $payload : false;
         }
         else{
             return false;

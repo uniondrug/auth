@@ -29,7 +29,7 @@ class AuthMiddleware extends Middleware
             $this->di->getLogger('auth')->debug(sprintf("[Auth] Invalid Token: token=%s", $token));
             return $this->serviceServer->withError('Forbidden: Invalid Token', 403);
         }
-        $this->di->set('auth_member', $member);
+        $_SERVER['member'] = $member;
         return $next($request);
     }
 }

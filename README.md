@@ -113,5 +113,5 @@
 ## 使用
 * 获取通过验证的用户
 ```php
-$this->di->get("auth_member")
+$_SERVER['member']
 ```

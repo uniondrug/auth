@@ -42,7 +42,7 @@ class AuthService extends Service
      * @return AuthMemberStruct|bool
      * @throws \Exception
      */
-    public function checkToken($token)
+    public function checkToken($token,$accEnv=null)
     {
         $token = explode('.', $token);
         if (count($token) != 3) return false;
@@ -57,6 +57,9 @@ class AuthService extends Service
         }
         elseif ($result){
             $payload = json_decode($this->base64url_decode($payloadEncoded), true);
+            if($accEnv){
+                if(!$this->checkAccEnv($payload,$accEnv)) return  false;
+            }
             $key = $payload['version']['key'];
             $version = $this->getRedis()->get($key);
             return $version == $payload['version']['value'] ? $payload : false;
@@ -64,6 +67,17 @@ class AuthService extends Service
         else{
             return false;
         }
+    }
+
+    /*
+     * 检查token内accEnv是否包含当前平台accEnv
+     */
+    private function checkAccEnv($payload,$accEnv)
+    {
+        $type = $payload['channel']['type'];
+        $accEnv = $accEnv."_".$type;
+        $existAccEnv = $payload['channel']['accEnvs'];
+        return in_array($accEnv,$existAccEnv);
     }
 
     /**
